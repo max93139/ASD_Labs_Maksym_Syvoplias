@@ -3,14 +3,18 @@ using System.Diagnostics;
 
 class Program
 {
+    static Random rand = new Random();   
+
     static void Main()
     {
         string choice;
         int size, x;
+        
+        Console.Clear();
         ReadInput(out size, out x);
-        int[] array = GenerateArray(size);
         Console.WriteLine("\nНатисніть Enter, щоб продовжити...");
         Console.ReadLine();
+
         do
         {
             Console.Clear();
@@ -20,93 +24,101 @@ class Program
             Console.WriteLine("3. Бінарний пошук:");
             Console.WriteLine("4. Бінарний пошук за правилом золотого перерізу:");
             Console.WriteLine("0. Вихід");
+
             choice = Console.ReadLine() ?? "";
 
             switch (choice)
-                {
-                    case "1":
-                    {
-                        Stopwatch sw = Stopwatch.StartNew();
-                        int result = LinearSearch(array, x);
-                        sw.Stop();
-                        Console.WriteLine($"Час виконання: {sw.Elapsed.TotalMilliseconds:F4} мс");
-                        if (result != -1)
-                            Console.WriteLine($"Знайдено на позиції {result}");
-                        else
-                            Console.WriteLine("Елемент не знайдено");
-                        break;
-                    }
-                    case "2":
-                    {
-                        Stopwatch sw = Stopwatch.StartNew();
-                        int result = BarrierSearch(array, x);
-                        sw.Stop();
-                        Console.WriteLine($"Час виконання: {sw.Elapsed.TotalMilliseconds:F4} мс");
-                        if (result != -1)
-                            Console.WriteLine($"Знайдено на позиції {result}");
-                        else
-                            Console.WriteLine("Елемент не знайдено");
-                        break;
-                    }
-                    case "3":
-                    {
-                        int[] arr = (int[])array.Clone();
-                        Stopwatch sw = Stopwatch.StartNew();
-                        int result = BinarySearch(arr, x);
-                        sw.Stop();
-                        Console.WriteLine($"Час виконання: {sw.Elapsed.TotalMilliseconds:F4} мс");
-                        if (result != -1)
-                            Console.WriteLine($"Знайдено на позиції {result}");
-                        else
-                            Console.WriteLine("Елемент не знайдено");
-                        break;
-                    }
-                    case "4":
-                    {
-                        int[] arr = (int[])array.Clone();
-                        Stopwatch sw = Stopwatch.StartNew();
-                        int result = GoldenRatioBinarySearch(arr, x);
-                        sw.Stop();
-                        Console.WriteLine($"Час виконання: {sw.Elapsed.TotalMilliseconds:F4} мс");
-                        if (result != -1)
-                            Console.WriteLine($"Знайдено на позиції {result}");
-                        else
-                            Console.WriteLine("Елемент не знайдено");
-                        break;
-                    }
-                    case "0":
-                        Console.WriteLine("Завершення програми...");
-                        Console.Clear();
-                        break;
-                    default:
-                        Console.WriteLine("Невірний вибір. Спробуйте ще раз.");
-                        break;
-                } 
-                   if (choice != "0")
-                {
-                    Console.WriteLine("\nНатисніть Enter, щоб повернутися до меню...");
-                    Console.ReadLine();
-                }
-        }while(choice != "0");
+            {
+                case "1":
+                    RunTest(LinearSearch, size, x ,false, "Linear");
+                    break;
+
+                case "2":
+                    RunTest(BarrierSearch, size, x, false, "Barrier");
+                    break;
+
+                case "3":
+                    RunTest(BinarySearch, size, x, true, "Binary");
+                    break;
+
+                case "4":
+                    RunTest(GoldenRatioBinarySearch, size, x, true, "Golden");
+                    break;
+
+                case "0":
+                    Console.WriteLine("Завершення програми...");
+                     Console.Clear();
+                    break;
+
+                default:
+                    Console.WriteLine("Невірний вибір.");
+                    break;
+            }
+
+            if (choice != "0")
+            {
+                Console.WriteLine("\nНатисніть Enter, щоб повернутися до меню...");
+                Console.ReadLine();
+            }
+
+        } while (choice != "0");
     }
+
+
+    static void RunTest(Func<int[], int, int> searchMethod,
+                        int size,
+                        int x,
+                        bool needsSorting,
+                        string name)
+    {
+        int runs = 10;
+        double totalTime = 0;
+        int[] results = new int[runs];
+
+        for (int i = 0; i < runs; i++)
+        {
+            int[] newArray = GenerateArray(size);
+            int randomX = x;
+
+            int[] arr = newArray;
+
+            if (needsSorting)
+            {
+                arr = (int[])newArray.Clone();
+                Array.Sort(arr);
+            }
+
+            Stopwatch sw = Stopwatch.StartNew();
+            results[i] = searchMethod(arr, randomX);
+            sw.Stop();
+
+            totalTime += sw.Elapsed.TotalMilliseconds;
+        }
+
+        Console.WriteLine($"\n{name} Search:");
+        Console.WriteLine($"Середній час: {totalTime / runs:F6} мс");
+
+        Console.WriteLine("Індекси знайдених елементів:");
+        for (int i = 0; i < runs; i++)
+            Console.Write(results[i] + " ");
+
+        Console.WriteLine();
+    }
+
     static void ReadInput(out int size, out int x)
     {
         Console.Write("Введіть розмір масиву: ");
         while (!int.TryParse(Console.ReadLine(), out size) || size <= 0)
-        {
             Console.Write("Некоректне число. Спробуйте ще раз: ");
-        }
 
-        Console.Write("Введіть число для пошуку: ");
+        Console.Write("Введіть число для пошуку : ");
         while (!int.TryParse(Console.ReadLine(), out x))
-        {
             Console.Write("Некоректне число. Спробуйте ще раз: ");
-        }
     }
-        static int[] GenerateArray(int size)
+
+    static int[] GenerateArray(int size)
     {
         int[] array = new int[size];
-        Random rand = new Random();
 
         for (int i = 0; i < size; i++)
             array[i] = rand.Next(0, 10000);
@@ -116,7 +128,7 @@ class Program
 
     static int LinearSearch(int[] array, int x)
     {
-         for (int i = 0; i < array.Length; i++)
+        for (int i = 0; i < array.Length; i++)
             if (array[i] == x)
                 return i;
 
@@ -143,50 +155,44 @@ class Program
 
     static int BinarySearch(int[] arr, int x)
     {
-          // Сортуємо масив
-    Array.Sort(arr);
+        int left = 0;
+        int right = arr.Length - 1;
 
-    int left = 0;
-    int right = arr.Length - 1;
+        while (left <= right)
+        {
+            int mid = (left + right) / 2;
 
-    while (left <= right)
-    {
-        int mid = (left + right) / 2;
+            if (arr[mid] == x)
+                return mid;
 
-        if (arr[mid] == x)
-            return mid;
+            if (arr[mid] < x)
+                left = mid + 1;
+            else
+                right = mid - 1;
+        }
 
-        if (arr[mid] < x)
-            left = mid + 1;
-        else
-            right = mid - 1;
-    }
-
-    return -1;
+        return -1;
     }
 
     static int GoldenRatioBinarySearch(int[] arr, int x)
     {
-       // Сортуємо масив
-    Array.Sort(arr);
+        int left = 0;
+        int right = arr.Length - 1;
+        const double phi = 0.618;
 
-    int left = 0;
-    int right = arr.Length - 1;
-    const double phi = 0.618;
+        while (left <= right)
+        {
+            int mid = left + (int)(phi * (right - left));
 
-    while (left <= right)
-    {
-        int mid = left + (int)(phi * (right - left));
+            if (arr[mid] == x)
+                return mid;
 
-        if (arr[mid] == x)
-            return mid;
+            if (arr[mid] < x)
+                left = mid + 1;
+            else
+                right = mid - 1;
+        }
 
-        if (arr[mid] < x)
-            left = mid + 1;
-        else
-            right = mid - 1;
+        return -1;
     }
-
-    return -1;
-    }
-}
+} 
