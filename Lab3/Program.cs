@@ -45,7 +45,7 @@ class Program
                     Console.Clear();
                     int[] arrayB = { 1, 1, 1, 1, 1, 1 };
                     int rightIndex = arrayB.Length - 1;
-                    int qStandard = rightIndex; // 
+                    int qStandard = rightIndex;
                     int qModified = ModifiedPartition((int[])arrayB.Clone(), 0, rightIndex);
 
                     PrintModifiedPartitionResult(arrayB, qStandard, qModified);
@@ -159,10 +159,7 @@ class Program
 
     static void PrintInitialPartitionState(int[] arr)
     {
-        Console.WriteLine("==================================================");
-        Console.WriteLine("1. ПРОЦЕДУРА PARTITION");
-        Console.WriteLine("==================================================");
-        Console.WriteLine($"Початковий масив: ({ArrayToString(arr)})\n");
+
     }
 
     static void PrintModifiedPartitionResult(int[] arrayB, int qStandard, int qModified)
