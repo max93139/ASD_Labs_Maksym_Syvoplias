@@ -127,10 +127,18 @@ class Program
 
                 case "9":
                     Console.Clear();
-                    Console.WriteLine("9. Задача про нафтову компанію (Оптимальне розташування трубопроводу)");
+                    Console.WriteLine("9. Оптимальне розташування магістрального трубопроводу (мінімальна сумарна довжина рукавів)");
 
-                    int[] yCoordinates = { 45, 22, 8, 31, 7 };
-                    Console.WriteLine($"\nКоординати y: {string.Join(", ", yCoordinates)}");
+                    int[] xCoordinates = { 2, 5, 8, 14, 18, 22, 27, 31, 35, 40 };
+                    int[] yCoordinates = { 15, 8, 20, 5, 12, 25, 3, 18, 10, 30 };
+                    Console.WriteLine("Свердловини (x, y):");
+                    for (int i = 0; i < xCoordinates.Length; i++)
+                    {
+                        Console.WriteLine($"#{i + 1}: ({xCoordinates[i]}, {yCoordinates[i]})");
+                    }
+                    Console.WriteLine();
+                     Console.WriteLine($"Оптимальний трубопровід - це горизонтальна лінія y = {optimalY}");
+                    Console.WriteLine($"Сумарна довжина рукавів = = {totalLength}\n");
 
                     Task9(yCoordinates, 0, yCoordinates.Length - 1);
                     break;
@@ -475,8 +483,6 @@ class Program
         while (left <= right)
         {
             int pivotIndex = rand.Next(left, right + 1);
-
-
             int temp = arr[pivotIndex];
             arr[pivotIndex] = arr[right];
             arr[right] = temp;
@@ -494,11 +500,9 @@ class Program
                     i++;
                 }
             }
-
             temp = arr[i];
             arr[i] = arr[right];
             arr[right] = temp;
-
             if (i == k)
                 break;
             else if (k < i)
@@ -506,16 +510,12 @@ class Program
             else
                 left = i + 1;
         }
-
         int optimalY = arr[k];
-
         int totalLength = 0;
         for (int i = 0; i < arr.Length; i++)
         {
             totalLength += Math.Abs(arr[i] - optimalY);
         }
 
-        Console.Write($"\nОптимальний рівень трубопроводу Y = {optimalY}");
-        Console.Write($"\nМінімальна загальна довжина рукавів = {totalLength}\n");
     }
 }
