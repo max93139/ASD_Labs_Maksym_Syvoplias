@@ -1,3 +1,4 @@
+
 # This file controls the behavior of Trunk: https://docs.trunk.io/cli
 # To learn more about the format of this file, see https://docs.trunk.io/reference/trunk-yaml
 version: 0.1
@@ -21,10 +22,3 @@ lint:
     - git-diff-check
     - prettier@3.8.1
     - trufflehog@3.93.6
-actions:
-  disabled:
-    - trunk-announce
-    - trunk-check-pre-push
-    - trunk-fmt-pre-commit
-  enabled:
-    - trunk-upgrade-available
