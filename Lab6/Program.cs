@@ -1671,7 +1671,7 @@ class Program
         Console.WriteLine("Завдання 5 (теоретичне). Перестановка Йосипа за O(n)");
         int? n = ReadInt("Введіть n: ");
         int? m = ReadInt("Введіть m: ");
-        if (!n.HasValue || !m.HasValue || n.Value <= 0 || m.Value <= 0 || m.Value >= n.Value)
+        if (!n.HasValue || !m.HasValue || n.Value <= 0 || m.Value <= 0)
         {
             Console.WriteLine("Очікую n > 0 та 0 < m < n. Використовую n=7, m=3.");
             n = 7;
