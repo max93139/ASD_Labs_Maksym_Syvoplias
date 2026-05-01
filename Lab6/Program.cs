@@ -1673,7 +1673,7 @@ class Program
         int? m = ReadInt("Введіть m: ");
         if (!n.HasValue || !m.HasValue || n.Value <= 0 || m.Value <= 0)
         {
-            Console.WriteLine("Очікую n > 0 та 0 < m < n. Використовую n=7, m=3.");
+            Console.WriteLine("Очікую n > 0 та m > 0. Використовую n=7, m=3.");
             n = 7;
             m = 3;
         }
