@@ -1562,7 +1562,7 @@ class Program
             events.Add((rectangles[i].X1, 0, rectangles[i]));
             events.Add((rectangles[i].X2, 1, rectangles[i]));
         }
-        events.Sort((p, q) => p.X != q.X ? p.X - q.X : p.Type - q.Type);
+        events.Sort((p, q) => p.X != q.X ? p.X.CompareTo(q.X) : p.Type.CompareTo(q.Type));
         var active = new List<Rectangle>();
         foreach (var e in events)
         {
